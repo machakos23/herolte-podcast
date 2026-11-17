@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>My NotebookLM Podcasts</title>
+    <link>https://machakos23.github.io/herolte-podcast</link>
+    <description>Audio overviews generated with NotebookLM</description>
+    <language>en</language>
+    <itunes:author>machakos23</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:block>Yes</itunes:block>
+
+  </channel>
+</rss>

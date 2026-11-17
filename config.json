@@ -1,0 +1,9 @@
+{
+  "title": "My NotebookLM Podcasts",
+  "description": "Audio overviews generated with NotebookLM",
+  "author": "machakos23",
+  "language": "en",
+  "bitrate": "96k",
+  "watch_dir": "~/Downloads",
+  "base_url": "https://machakos23.github.io/herolte-podcast"
+}
