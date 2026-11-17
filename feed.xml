@@ -8,13 +8,6 @@
     <itunes:author>machakos23</itunes:author>
     <itunes:explicit>false</itunes:explicit>
     <itunes:block>Yes</itunes:block>
-    <item>
-      <title>Welcome</title>
-      <description>Welcome</description>
-      <guid isPermaLink="false">2026-11-17-100746-welcome.mp3</guid>
-      <pubDate>Tue, 17 Nov 2026 10:07:46 +0000</pubDate>
-      <enclosure url="https://machakos23.github.io/herolte-podcast/episodes/2026-11-17-100746-welcome.mp3" length="60956" type="audio/mpeg"/>
-      <itunes:duration>00:00:05</itunes:duration>
-    </item>
+
   </channel>
 </rss>
