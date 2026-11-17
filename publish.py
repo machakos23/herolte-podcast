@@ -26,6 +26,7 @@ INBOX = ROOT / "inbox"
 EPISODES = ROOT / "episodes"
 ORIGINALS = ROOT / "originals"  # gitignored backup of the raw downloads
 DB = ROOT / "episodes.json"
+SEEN = ROOT / "published.json"  # watch-dir file names already picked up (never re-added)
 AUDIO_EXT = {".wav", ".m4a", ".mp3", ".mp4", ".ogg", ".aac", ".flac", ".webm"}
 
 
@@ -61,7 +62,7 @@ def process_inbox(episodes):
             "duration": duration(dst),
             "bytes": dst.stat().st_size,
         })
-        shutil.move(str(src), ORIGINALS / src.name)
+        src.unlink()  # inbox holds copies; the original stays where it was
     return len(files)
 
 
@@ -112,30 +113,36 @@ def push():
 
 
 def watch():
-    """Poll the watch dir; move finished new audio downloads into inbox/ and publish."""
+    """Poll the watch dir; copy audio not yet published into inbox/ and publish.
+
+    Files are copied, never moved, so the watch dir is left untouched.
+    """
     wdir = Path(CONFIG.get("watch_dir", "~/Downloads")).expanduser()
-    seen = {p for p in wdir.iterdir()}  # ignore files that were already there
+    seen = set(json.loads(SEEN.read_text())) if SEEN.exists() else set()
     sizes = {}
-    print(f"watching {wdir} for new audio (Ctrl+C to stop)")
+    print(f"watching {wdir} for audio (Ctrl+C to stop)")
     while True:
-        time.sleep(5)
         ready = []
         for p in wdir.iterdir():
-            if p in seen or p.suffix.lower() not in AUDIO_EXT or not p.is_file():
+            if p.name in seen or p.suffix.lower() not in AUDIO_EXT or not p.is_file():
                 continue
             size = p.stat().st_size
             if size > 0 and sizes.get(p) == size:  # size stable -> download finished
                 ready.append(p)
             sizes[p] = size
         for p in ready:
-            print(f"new download: {p.name}")
-            shutil.move(str(p), INBOX / p.name)
+            print(f"new file: {p.name}")
+            shutil.copy2(p, INBOX / p.name)
             sizes.pop(p, None)
+            seen.add(p.name)
+        if ready:
+            SEEN.write_text(json.dumps(sorted(seen), indent=2) + "\n")
         if ready:
             try:
                 run(push_after=True)
             except subprocess.CalledProcessError as e:
                 print(f"error: {e}")
+        time.sleep(5)
 
 
 def run(push_after):
